@@ -1,0 +1,41 @@
+model User {
+  id            String           @id @default(uuid())
+  name          String?
+  email         String?          @unique
+  password      String?          // null for social login
+  role          Role             @default(USER)
+  isActive      Boolean          @default(true)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  // Relations
+  accounts      AuthProvider[]   // social/local accounts
+}
+
+/* -------------------------------------------------
+   AUTH PROVIDERS — local, google, twitter etc.
+--------------------------------------------------*/
+model AuthProvider {
+  id             String       @id @default(uuid())
+  provider       AuthType     // "local" | "google" | "twitter"
+  providerId     String?      // googleId / twitterId
+  userId         String
+  createdAt      DateTime     @default(now())
+  
+  // Relation
+  user           User         @relation(fields: [userId], references: [id])
+}
+
+/* -------------------------------------------------
+   ENUMS
+--------------------------------------------------*/
+enum Role {
+  USER
+  ADMIN
+}
+
+enum AuthType {
+  local
+  google
+  twitter
+}
