@@ -14,13 +14,16 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user: any = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user: any = await this.usersService.findOne(email);
+
+    if (!user) {
+      throw new BadRequestException('User not found');
     }
-    return null;
+    const isValidPass = await bcrypt.compare(pass, user.password);
+    if (!isValidPass) {
+      throw new BadRequestException('Invalid credential');
+    }
   }
 
   async login(user: any) {

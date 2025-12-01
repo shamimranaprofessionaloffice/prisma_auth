@@ -1,7 +1,7 @@
 import { HandleError } from '@/common/error/handle-error.decorator';
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { RegisterDto } from './dto/register.dto';
+import { loginDTO, RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -13,8 +13,12 @@ export class AuthController {
   @ApiResponse({ status: 201, description: 'User registered successfully' })
   @ApiResponse({ status: 400, description: 'User already exists' })
   register(@Body() dto: RegisterDto) { 
-    console.log("eeeeeeeeeeee",dto);
-    
     return this.authService.register(dto);
+  }
+
+  @Post('login')
+  @ApiOperation({ summary: 'Login a user (Local Signin)' })
+  login(@Body() dto: loginDTO) {
+    return this.authService.login(dto);
   }
 }

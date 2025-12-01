@@ -5,6 +5,7 @@ import { LocalStrategy } from './local.strategy';
 import { UsersModule } from '@/users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import 'dotenv/config'
 
 @Module({
   imports: [
