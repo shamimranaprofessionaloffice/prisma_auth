@@ -24,12 +24,21 @@ export class AuthService {
     if (!isValidPass) {
       throw new BadRequestException('Invalid credential');
     }
+    return user;
   }
 
+  @HandleError('login error')
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
-    return {
-      access_token: this.jwtService.sign(payload),
+     const {password, ...payload} = user
+   console.log(payload);
+   
+    return { 
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+      token: this.jwtService.sign(payload),
     };
   }
 
